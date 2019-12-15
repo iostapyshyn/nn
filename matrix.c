@@ -6,26 +6,36 @@
 #include <float.h>
 
 #include "matrix.h"
+#include "util.h"
 
 /* Allocates new matrix on heap. */
 matrix *create_matrix(int rows, int cols, double *data) {
-    matrix *m = malloc(sizeof(matrix));
-    assert(m); // !!
+    matrix *new = malloc(sizeof(matrix));
+    if (new == NULL) {
+        /* Allocation failed, there is no point in continuing. */
+        perror(__func__);
+        assert(new != NULL);
+    }
     
-    m->rows = rows;
-    m->cols = cols;
-    m->data = malloc(rows*cols * sizeof(double));
-
-    assert(m->data); // !!
+    new->rows = rows;
+    new->cols = cols;
+    new->data = malloc(rows*cols * sizeof(double));
+    if (new->data == NULL) {
+        free(new);
+        perror(__func__);
+        assert(new->data != NULL);
+    }
     
+    /* Copy data as the underlying array, of fill with zeroes. */
     if (data) {
-        memcpy(m->data, data, rows*cols * sizeof(data));
-    } else memset(m->data, 0, rows*cols * sizeof(data));
+        memcpy(new->data, data, rows*cols * sizeof(data));
+    } else memset(new->data, 0, rows*cols * sizeof(data));
 
-    return m;
+    return new;
 }
 
 void matrix_apply(matrix *m, double (*f)(double), matrix *result) {
+    /* Result matrix should be of the same dimensions as input. */
     assert(m->rows == result->rows && m->cols == result->cols);
 
     for (int i = 0; i < m->rows; i++) {
@@ -36,8 +46,8 @@ void matrix_apply(matrix *m, double (*f)(double), matrix *result) {
 }
 
 void matrix_add(matrix *mat, matrix *B) {
-    assert(mat->rows == B->rows &&
-           mat->cols == B->cols);
+    /* Matrices should have equal dimensions. */
+    assert(mat->rows == B->rows && mat->cols == B->cols);
 
     for (int i = 0; i < mat->rows; i++) {
         for (int j = 0; j < mat->cols; j++) {
@@ -46,17 +56,17 @@ void matrix_add(matrix *mat, matrix *B) {
     }
 }
 
-void matrix_scalarproduct(matrix *matrix, double scalar) {
-    for (int i = 0; i < matrix->rows; i++) {
-        for (int j = 0; j < matrix->cols; j++) {
-            *matrix_at(matrix, i, j) *= scalar;
+void matrix_scalarproduct(matrix *mat, double scalar) {
+    for (int i = 0; i < mat->rows; i++) {
+        for (int j = 0; j < mat->cols; j++) {
+            *matrix_at(mat, i, j) *= scalar;
         }
     }        
 }
 
 void matrix_multiply_elementwise(matrix *mat, matrix *B) {
-    assert(mat->rows == B->rows &&
-           mat->cols == B->cols);
+    /* Matrices should have equal dimensions. */
+    assert(mat->rows == B->rows && mat->cols == B->cols);
 
     for (int i = 0; i < mat->rows; i++) {
         for (int j = 0; j < mat->cols; j++) {
@@ -66,10 +76,11 @@ void matrix_multiply_elementwise(matrix *mat, matrix *B) {
 }
 
 void matrix_product(matrix *a, matrix *b, matrix *res) {
-    assert(a->cols == b->rows); //!!
+    /* Check inputs' dimensions. */
+    assert(a->cols == b->rows);
 
-    assert(res->rows == a->rows); //!!
-    assert(res->cols == b->cols); //!!
+    /* Check result matrix dimensions. */
+    assert(res->rows == a->rows && res->cols == b->cols);
     
     for (int i = 0; i < a->rows; i++) {
         for (int j = 0; j < b->cols; j++) {
@@ -83,6 +94,8 @@ void matrix_product(matrix *a, matrix *b, matrix *res) {
 }
 
 void matrix_destroy(matrix *m) {
+    if (!m) return;
+    
     free(m->data);
     free(m);
 }

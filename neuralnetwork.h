@@ -9,7 +9,7 @@ typedef struct layer {
                         * M - number of outputs,
                         * N - number of inputs. */
     matrix *weights_delta; /* weight gradients multiplied by the learning rate */
-    
+
     matrix *biases; /* biases */
     matrix *biases_delta; /* bias gradients multiplied by the learning rate */
     
@@ -24,12 +24,13 @@ typedef struct layer {
 
 layer *nn_output(layer *head);
 
-void nn_addlayer(layer **head, int outputs, int inputs,
-                 double *weights, double *biases,
+void nn_addlayer(layer **head, int outputs, int inputs, double *weights, double *biases,
                  int activation);
 
 double *nn_forwardpropagate(layer *head, double *input);
 double nn_backpropagate(layer *head, double *input, double *target, double learningrate);
+
+double forwardpropagate_error(layer *head, double *input, double *target);
 
 void nn_destroy(layer *head);
 
@@ -39,6 +40,14 @@ static inline int layer_ninputs(layer *layer) {
 
 static inline int layer_noutputs(layer *layer) {
     return layer->weights->rows;
+}
+
+static inline int nn_ninputs(layer *head) {
+    return layer_ninputs(head);
+}
+
+static inline int nn_noutputs(layer *head) {
+    return layer_noutputs(nn_output(head));
 }
 
 #endif

@@ -1,25 +1,16 @@
 #include <stdio.h>
+#include <unistd.h>
 
 #include "neuralnetwork.h"
-
-/* TODO:
- * Include biases in the back propagation algorithm.
- * Allow to store neural network as a file.
- */
+#include "util.h"
 
 #define LEARNING_RATE 0.5
 
-int main() {
+int main(int argc, char *argv[]) {
+#if 0
+
     layer *head = NULL;
-
-/*
-    nn_add(&head, 12, 4, NULL, NULL, SIGMOID);
-    for (int i = 0; i < 3; i++) {
-        nn_add(&head, 12, 12, NULL, NULL, SIGMOID);
-    }
-    nn_add(&head, 4, 12, NULL, NULL, SIGMOID);
-*/
-
+    
     nn_addlayer(&head, 2, 2, (double[]) {
             0.15, 0.20,
             0.25, 0.30,
@@ -29,10 +20,20 @@ int main() {
             0.40, 0.45,
             0.50, 0.55,
         }, (double[]) { 0.60, 0.60, }, SIGMOID);
-    
-    double input[layer_ninputs(head)];
-    double target[layer_noutputs(nn_output(head))];
 
+    
+    nn_writefile(head, "test.nn");
+
+#else
+
+    layer *head = nn_readfile("test.nn");
+    if (head == NULL) {
+        return 1;
+    }
+    
+    double input[nn_ninputs(head)];
+    double target[nn_noutputs(head)];
+    
     for (;;) {
         printf("Input? ");
         for (int i = 0; i < layer_ninputs(head); i++) {
@@ -46,6 +47,9 @@ int main() {
         printf("Etotal = %lf\n", nn_backpropagate(head, input, target, LEARNING_RATE));
     }
     
+
+#endif
+
     nn_destroy(head);  
     return 0;
 }
