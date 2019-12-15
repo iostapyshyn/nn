@@ -9,3 +9,5 @@ add_executable(nn nn_main.c
   util.c util.h
   activations.c activations.h
   matrix.c matrix.h)
+
+target_link_libraries(nn m)
