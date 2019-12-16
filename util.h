@@ -3,8 +3,8 @@
 
 #include "neuralnetwork.h"
 
-int nn_writefile(layer *head, char *filename);
-layer *nn_readfile(char *filename);
+int nn_writefile(layer *head, const char *filename);
+layer *nn_readfile(const char *filename);
 
 double rand_normal_distribution(double mu, double sigma);
 

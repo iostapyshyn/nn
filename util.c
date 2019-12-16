@@ -32,7 +32,7 @@ double rand_normal_distribution(double mu, double sigma) {
     return z0 * sigma + mu;
 }
 
-int nn_writefile(layer *start, char *filename) {
+int nn_writefile(layer *start, const char *filename) {
     FILE *file = fopen(filename, "wb");
     if (!file) {
         perror(__func__);
@@ -75,7 +75,7 @@ int nn_writefile(layer *start, char *filename) {
     return 1;
 }
 
-layer *nn_readfile(char *filename) {
+layer *nn_readfile(const char *filename) {
     FILE *file = fopen(filename, "rb");
     if (!file) {
         perror(__func__);
