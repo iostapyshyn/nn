@@ -193,7 +193,7 @@ int main(int argc, char *argv[]) {
 
     double *input = malloc(nn_ninputs(head) * sizeof(double));
     for (int i = 0; i < nn_ninputs(head); i++) {
-        input[i] = (double) raw[i] / 255.0;
+        input[i] = (double)(255-raw[i]) / 255.0;
     }
 
     double *output = nn_forwardpropagate(head, input);
@@ -207,7 +207,6 @@ int main(int argc, char *argv[]) {
     printf("]\n => Guess: '%d'\n", k);
     
     free(input);
-    free(raw);
     stbi_image_free(data);
     nn_destroy(head);    
     return 0;
