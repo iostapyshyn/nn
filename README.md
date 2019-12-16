@@ -23,4 +23,4 @@ build/digits image.png
 The program will perform the training on it's first run.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
