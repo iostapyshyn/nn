@@ -8,6 +8,7 @@ the [MNIST database](http://yann.lecun.com/exdb/mnist/)
 to train itself and classify images of handwritten digits.
 
 ```
+git submodule update --init --recursive
 mkdir build
 cd build
 cmake ..
