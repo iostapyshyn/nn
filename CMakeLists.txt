@@ -1,16 +1,17 @@
 cmake_minimum_required(VERSION 3.12)
-project(nn C)
+project(nn VERSION 1.0.1 DESCRIPTION "Neural Network with back propagation learning.")
 
-set(CMAKE_BUILD_TYPE Debug)
+# Library
+add_library(nn STATIC
+  src/neuralnetwork.c
+  src/util.c
+  src/activations.c
+  src/matrix.c)
 
-add_executable(digits digits.c
-  neuralnetwork.c
-  neuralnetwork.h
-  util.c
-  util.h
-  activations.c
-  activations.h
-  matrix.c
-  matrix.h)
+set_target_properties(nn PROPERTIES VERSION ${PROJECT_VERSION})
+target_include_directories(nn INTERFACE include)
+target_link_libraries(nn m)
 
-target_link_libraries(digits m)
+# Demo
+add_executable(digits examples/digits/digits.c)
+target_link_libraries(digits nn)
