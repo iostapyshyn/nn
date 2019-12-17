@@ -13,5 +13,5 @@ target_include_directories(nn INTERFACE include)
 target_link_libraries(nn m)
 
 # Demo
-add_executable(digits examples/digits/digits.c)
+add_executable(digits examples/digits.c)
 target_link_libraries(digits nn)
