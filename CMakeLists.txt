@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(nn VERSION 1.0.1 DESCRIPTION "Neural Network with back propagation learning.")
+project(nn DESCRIPTION "Neural Network with back propagation learning.")
 
 # Library
 add_library(nn STATIC
@@ -8,7 +8,6 @@ add_library(nn STATIC
   src/activations.c
   src/matrix.c)
 
-set_target_properties(nn PROPERTIES VERSION ${PROJECT_VERSION})
 target_include_directories(nn INTERFACE include)
 target_link_libraries(nn m)
 
