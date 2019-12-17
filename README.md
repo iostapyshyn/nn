@@ -16,7 +16,7 @@ make
 
 To run the example:
 ```
-digits five.png
+./digits five.png
 ```
 
 The program will perform the training on it's first run.
