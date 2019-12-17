@@ -22,7 +22,7 @@ To run the example:
 The program will perform the training on it's first run.
 
 ### Quickstart
-Look into `include/nn/nn.h` for API explanation.
+Please check `include/nn/nn.h` for better API explanation.
 ```c
 /* Allocate a new (empty) network with n inputs. */
 neuralnetwork *nn_create(int n);
@@ -31,7 +31,11 @@ void nn_destroy(neuralnetwork *nn);
 
 /* Adds a new layer to the network with specified number of neurons.
  * Weights can be passed as a matrix stored in a double array.
- * NULL initializes weights randomly and biases with 0. */
+ * NULL initializes weights randomly and biases with 0. 
+ * Possible values for activations: 
+ * IDENTITY, STEP, TANH, RELU, RELU_LEAKY, GAUSSIAN, SIGMOID, SOFTPLUS 
+ * Xavier initialization is used for all activation functions, except RELUs,
+ * for which Kaiming is used. */
 void nn_addlayer(neuralnetwork *nn, int nodes, double *weights, double *biases, int activation);
 
 /* Forward propagates a given input through the network.
