@@ -47,7 +47,6 @@ double nn_backpropagate(neuralnetwork *nn, double *input, double *target, double
 int nn_ninputs(neuralnetwork *nn);
 int nn_noutputs(neuralnetwork *nn);
 
-
 /* File I/O functions. Stores/reads the network as a binary file to keep the double precision. */
 int nn_writefile(const neuralnetwork *nn, const char *filename);
 neuralnetwork *nn_readfile(const char *filename);
