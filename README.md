@@ -14,7 +14,7 @@ cmake ..
 make
 ```
 
-From the root directory:
+To run the example:
 ```
 digits five.png
 ```
