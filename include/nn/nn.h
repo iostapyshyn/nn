@@ -10,7 +10,7 @@ typedef struct layer layer;
 typedef struct neuralnetwork neuralnetwork;
 
 neuralnetwork *nn_create(int inputs);
-void nn_addlayer(neuralnetwork *head, int outputs, double *weights, double *biases,
+void nn_addlayer(neuralnetwork *nn, int nodes, double *weights, double *biases,
                  int activation);
 
 double *nn_forwardpropagate(neuralnetwork *nn, double *input);
