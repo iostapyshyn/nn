@@ -188,26 +188,23 @@ int main(int argc, char *argv[]) {
     const int bytes_per_pixel = 1;
     
     int x, y, n;
-    uint8_t *data = stbi_load(argv[1], &x, &y, NULL, bytes_per_pixel);
-    if (data == NULL) {
+    uint8_t *image = stbi_load(argv[1], &x, &y, NULL, bytes_per_pixel);
+    if (image == NULL) {
         fprintf(stderr, "Unable to load image %s\n", argv[1]);
         return 1;
     }
 
+    /* Resize the image to match the number of inputs. */
+    uint8_t raw[PIXEL_ROWS*PIXEL_COLS];
+    if (x != PIXEL_ROWS || y != PIXEL_COLS) {
+        stbir_resize_uint8(image, x, y, 0, raw, PIXEL_ROWS, PIXEL_COLS, 0, bytes_per_pixel);
+    } else memcpy(raw, image, PIXEL_ROWS*PIXEL_COLS);
+
     /* Read the pretrained network. */
     neuralnetwork *nn = nn_readfile(netfile);
 
-    /* Resize the image to match the number of inputs. */
-    uint8_t *raw = NULL;
-    if (x != PIXEL_ROWS || y != PIXEL_COLS) {
-        raw = malloc(PIXEL_ROWS * PIXEL_COLS);
-        stbir_resize_uint8(data, x, y, 0, raw, PIXEL_ROWS, PIXEL_COLS, 0, bytes_per_pixel);
-        stbi_image_free(data);
-        data = NULL;
-    } else raw = data;
-
-    double *input = malloc(nn_ninputs(nn) * sizeof(double));
-    for (int i = 0; i < nn_ninputs(nn); i++) {
+    double input[PIXEL_ROWS*PIXEL_COLS];
+    for (int i = 0; i < PIXEL_ROWS*PIXEL_COLS; i++) {
         input[i] = (double)(255-raw[i]) / 255.0;
     }
 
@@ -221,10 +218,7 @@ int main(int argc, char *argv[]) {
     }
     printf("]\n => Guess: '%d'\n", k);
     
-    free(input);
-    if (data) {
-        stbi_image_free(data);
-    } else free(raw);
+    stbi_image_free(image);
     nn_destroy(nn);    
     return 0;
 }
