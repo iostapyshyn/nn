@@ -36,7 +36,7 @@ enum activations {
 typedef struct neuralnetwork neuralnetwork;
 
 /**
- *  Allocates a new (empty) network. 
+ * Allocates a new (empty) network. 
  * @param inputs The number of inputs of the new network.
  * @return A pointer to the heap allocated struct. 
  */
