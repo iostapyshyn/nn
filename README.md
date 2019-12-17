@@ -9,7 +9,6 @@ to train itself and classify images of handwritten digits.
 
 ```
 git submodule update --init --recursive
-mkdir build
 cd build
 cmake ..
 make
@@ -17,7 +16,7 @@ make
 
 From the root directory:
 ```
-build/digits image.png
+digits five.png
 ```
 
 The program will perform the training on it's first run.
