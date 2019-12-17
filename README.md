@@ -3,7 +3,7 @@ Neural Network with back propagation learning algorithm written in C.
 
 ## Usage
 The project is intended to be used as a library.
-However, there is a demo program `digits.c` included, which uses
+However, there is a demo program `examples/digits.c` included, which uses
 the [MNIST database](http://yann.lecun.com/exdb/mnist/)
 to train itself and classify images of handwritten digits.
 
