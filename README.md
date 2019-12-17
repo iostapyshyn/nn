@@ -24,7 +24,7 @@ The program will perform the training on it's first run.
 ### Quickstart
 Please check `include/nn/nn.h` for better API explanation.
 ```c
-/* Allocate a new (empty) network with n inputs. */
+/* Allocates a new (empty) network with n inputs. */
 neuralnetwork *nn_create(int n);
 /* Deallocates the network and all allocated data. */
 void nn_destroy(neuralnetwork *nn);
@@ -51,7 +51,8 @@ double nn_backpropagate(neuralnetwork *nn, double *input, double *target, double
 int nn_ninputs(neuralnetwork *nn);
 int nn_noutputs(neuralnetwork *nn);
 
-/* File I/O functions. Stores/reads the network as a binary file to keep the double precision. */
+/* File I/O functions. Store/read the network as a binary file to keep the double precision.
+ * 0 or NULL is returned on failure. */
 int nn_writefile(const neuralnetwork *nn, const char *filename);
 neuralnetwork *nn_readfile(const char *filename);
 ```
