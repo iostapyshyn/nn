@@ -1,14 +1,14 @@
 /**
  * Copyright (c) 2019 Illia Ostapyshyn
  *
- * Permission is hereby granted, free of charge, to any person obtaining
+ * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the 
  * Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
+ * 
+ * The above copyright notice and this permission notice shall be included 
  * in all copies or substantial portions of the Software.
  */
 
@@ -55,7 +55,7 @@ static double xavier_generate(int outputs, int inputs) {
     double sigma = sqrt(2.0 / (outputs+inputs));
     /* Limit. */
     double max = sqrt(6.0 / (outputs+inputs));
-
+    
     double val = rand_normal_distribution(0, sigma);
 
     if (val < -max) {
@@ -69,7 +69,7 @@ static double xavier_generate(int outputs, int inputs) {
 static double kaiming_generate(int inputs, double a) {
     /* Standart deviation. */
     double sigma = sqrt(2.0 / (inputs*(1+a*a)));
-
+    
     return rand_normal_distribution(0, sigma);
 }
 
@@ -95,14 +95,14 @@ void nn_addlayer(neuralnetwork *nn, int outputs, double *weights, double *biases
 
         /* Seed RNG on the first pass. */
         srand(time(NULL));
-
+    
     } else {
         layer *current = nn->head;
         while (current->next != NULL) current = current->next;
 
         current->next = calloc(sizeof(layer), 1);
         new = current->next;
-
+        
         new->prev = current;
         inputs = layer_noutputs(current);
     }
@@ -111,11 +111,11 @@ void nn_addlayer(neuralnetwork *nn, int outputs, double *weights, double *biases
     new->weights_delta = create_matrix(outputs, inputs, NULL);
 
     /* Populate the weights matrix. */
-    if (weights == NULL) {
+    if (weights == NULL) {    
         for (int i = 0; i < new->weights->rows; i++) {
             for (int j = 0; j < new->weights->cols; j++) {
                 switch (activation) {
-                case RELU:
+                case RELU: 
                     *matrix_at(new->weights, i, j) = kaiming_generate(inputs, 0); break;
                 case RELU_LEAKY:
                     *matrix_at(new->weights, i, j) = kaiming_generate(inputs, RELU_LEAKY_LEAKAGE); break;
@@ -133,7 +133,7 @@ void nn_addlayer(neuralnetwork *nn, int outputs, double *weights, double *biases
 
     new->net = create_matrix(outputs, 1, NULL);
     new->out = create_matrix(outputs, 1, NULL);
-
+    
     new->next = NULL;
     nn->outputs = outputs;
 }
@@ -142,16 +142,16 @@ void nn_addlayer(neuralnetwork *nn, int outputs, double *weights, double *biases
 static void layers_destroy(layer *head) {
     if (head != NULL) {
         layers_destroy(head->next);
-
+        
         matrix_destroy(head->weights);
         matrix_destroy(head->weights_delta);
 
         matrix_destroy(head->biases);
         matrix_destroy(head->biases_delta);
-
+        
         matrix_destroy(head->net);
         matrix_destroy(head->out);
-
+        
         free(head);
     }
 }
@@ -170,22 +170,22 @@ static void layer_apply(layer *layer, matrix *invec) {
     matrix_apply(layer->net, activations[layer->activation], layer->out);
 }
 
-/* Forward propagates given input through the network.
+/* Forward propagates given input through the network. 
  * The output will be stored in the output buffer, if given. */
-double *nn_forwardpropagate(neuralnetwork *nn, double *input) {
+double *nn_forwardpropagate(neuralnetwork *nn, double *input) {    
     if (nn == NULL || nn->head == NULL) return NULL;
-
+    
     /* Allocate a matrix on stack for the first layer.
      * The out field of the layer is used as input for all the consecutive layers. */
     matrix first = { nn->inputs, 1, input };
     matrix *p = &first;
-
+    
     int i = 0;
     layer *current = nn->head;
     while (current != NULL) {
         layer_apply(current, p);
         p = current->out;
-
+        
         current = current->next;
     }
 
@@ -206,7 +206,7 @@ static void nextdelta(matrix **delta, layer *layer) {
     (*delta)->rows = 1;
 
     matrix_product(*delta, layer->weights, nextdelta);
-
+        
     /* Transpose newdelta */
     nextdelta->rows = nextdelta->cols;
     nextdelta->cols = 1;
@@ -225,7 +225,7 @@ static void nextdelta(matrix **delta, layer *layer) {
 static void update_weights(const neuralnetwork *nn) {
     layer *p = nn->head;
     while (p != NULL) {
-        matrix_add(p->weights, p->weights_delta);
+        matrix_add(p->weights, p->weights_delta);        
         p = p->next;
     }
 }
@@ -233,15 +233,15 @@ static void update_weights(const neuralnetwork *nn) {
 static void update_biases(const neuralnetwork *nn) {
     layer *p = nn->head;
     while (p != NULL) {
-        matrix_add(p->biases, p->biases_delta);
+        matrix_add(p->biases, p->biases_delta);        
         p = p->next;
-    }
+    }    
 }
 
-double nn_backpropagate(neuralnetwork *nn, double *input, double *target, double learningrate) {
+double nn_backpropagate(neuralnetwork *nn, double *input, double *target, double learningrate) {    
     layer *last = nn_outputlayer(nn);
     int outn = nn->outputs; /* quantity of network's outputs */
-
+    
     double *output = nn_forwardpropagate(nn, input); /* forward propagate to get output */
 
     double etotal = 0, dEdout[outn];
@@ -264,7 +264,7 @@ double nn_backpropagate(neuralnetwork *nn, double *input, double *target, double
 
     /* dE/dout * dout/dnet = dE/dnet in delta */
     matrix_multiply_elementwise(delta, doutdnet);
-
+    
     matrix_destroy(doutdnet);
 
     layer *current = last;
@@ -272,7 +272,7 @@ double nn_backpropagate(neuralnetwork *nn, double *input, double *target, double
         /* dnet/dWij = output of the prev. layer,
          * as all the terms except outj*Wij in the net summation are treated as constants and
          * therefore vanish after taking derivative. */
-
+        
         /* Hacky transpose of prev. layer's out matrix for multiplication purposes. */
         matrix dnetdw = { 1, current->prev->out->rows, current->prev->out->data };
 
@@ -305,7 +305,7 @@ double nn_backpropagate(neuralnetwork *nn, double *input, double *target, double
 
     update_weights(nn);
     update_biases(nn);
-
+    
     matrix_destroy(delta);
     return etotal;
 }
