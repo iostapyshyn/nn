@@ -31,9 +31,9 @@ void nn_destroy(neuralnetwork *nn);
 
 /* Adds a new layer to the network with specified number of neurons.
  * Weights can be passed as a matrix stored in a double array.
- * NULL initializes weights randomly and biases with 0. 
- * Possible values for activations: 
- * IDENTITY, STEP, TANH, RELU, RELU_LEAKY, GAUSSIAN, SIGMOID, SOFTPLUS 
+ * NULL initializes weights randomly and biases with 0.
+ * Possible values for activations:
+ * IDENTITY, STEP, TANH, RELU, RELU_LEAKY, GAUSSIAN, SIGMOID, SOFTPLUS
  * Xavier initialization is used for all activation functions, except RELUs,
  * for which Kaiming is used. */
 void nn_addlayer(neuralnetwork *nn, int nodes, double *weights, double *biases, int activation);
@@ -42,8 +42,8 @@ void nn_addlayer(neuralnetwork *nn, int nodes, double *weights, double *biases, 
  * Returns pointer to the output array. */
 double *nn_forwardpropagate(neuralnetwork *nn, double *input);
 
-/* Performs forward propagation followed by the backpropagation to teach the network. 
- * Passing learning rate of 0 will not perform back propagation. 
+/* Performs forward propagation followed by the backpropagation to teach the network.
+ * Passing learning rate of 0 will not perform back propagation.
  * Returns mean squared error of the forward pass. */
 double nn_backpropagate(neuralnetwork *nn, double *input, double *target, double learningrate);
 
